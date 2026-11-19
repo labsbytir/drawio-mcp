@@ -1,0 +1,19 @@
+name: sync-upstream
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with: {ref: main, fetch-depth: 0}
+      - name: Sync jgraph/drawio-mcp main
+        run: |
+          git remote add upstream https://github.com/jgraph/drawio-mcp.git
+          git fetch upstream main
+          git merge --ff-only upstream/main
+          git push origin main
